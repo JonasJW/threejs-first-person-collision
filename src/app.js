@@ -128,9 +128,6 @@ function init() {
     if (controls.isLocked) {
       followCamera = !followCamera;
     }
-    // if (objectPointerAt) {
-    //   followCamera = true;
-    // }
   }
 
   document.addEventListener("keydown", onKeyDown);
@@ -303,14 +300,13 @@ function animate() {
       }
       objectPointerAt.material = new THREE.MeshPhongMaterial( { color: "#da431e" } );
       camera.add(objectPointerAt);
-      objectPointerAt.position.set(0,0,-30);
-      objectPointerAt.scale.x = objectPointerAt.scale.y = objectPointerAt.scale.z = 0.6;
+      objectPointerAt.position.set(0,0,-5);
+      objectPointerAt.scale.x = objectPointerAt.scale.y = objectPointerAt.scale.z = 0.1;
     } else {
 
       if (isFollowing) {
         camera.remove(objectPointerAt);
         scene.add( objectPointerAt );
-        console.log(originalPosition);
         objectPointerAt.position.x = originalPosition.x;
         objectPointerAt.position.y = originalPosition.y;
         objectPointerAt.position.z = originalPosition.z;
@@ -325,13 +321,10 @@ function animate() {
           if (objectPointerAt) {
             objectPointerAt.material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
             objectPointerAt.scale.x = objectPointerAt.scale.y = objectPointerAt.scale.z = 1;
-            console.log(1);
-  
           }
           objectPointerAt = intersectionsPointer[0].object;
           objectPointerAt.material = new THREE.MeshPhongMaterial( { color: "#ffab2e" } );
           objectPointerAt.scale.x = objectPointerAt.scale.y = objectPointerAt.scale.z = 1.1;
-          console.log(2);
   
         } else {
         }
@@ -339,7 +332,6 @@ function animate() {
         if (objectPointerAt) {
           objectPointerAt.material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
           objectPointerAt.scale.x = objectPointerAt.scale.y = objectPointerAt.scale.z = 1;
-          console.log(3);
           objectPointerAt = undefined;
         }
       }
