@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
+import { PLAYER_COLLISION_DISTANCE, PLAYER_INTERACTIVITY_DISTANCE, PLAYER_SPEED } from "./app";
 
 export default class Player extends PointerLockControls {
   constructor(camera, document, scene) {
@@ -105,31 +106,31 @@ export default class Player extends PointerLockControls {
       new THREE.Vector3(),
       new THREE.Vector3(0, 0, -1),
       0,
-      10
+      PLAYER_COLLISION_DISTANCE
     );
     this.raycasterBehind = new THREE.Raycaster(
       new THREE.Vector3(),
       new THREE.Vector3(),
       0,
-      10
+      PLAYER_COLLISION_DISTANCE
     );
     this.raycasterLeft = new THREE.Raycaster(
       new THREE.Vector3(),
       new THREE.Vector3(),
       0,
-      10
+      PLAYER_COLLISION_DISTANCE
     );
     this.raycasterRight = new THREE.Raycaster(
       new THREE.Vector3(),
       new THREE.Vector3(),
       0,
-      10
+      PLAYER_COLLISION_DISTANCE
     );
     this.raycasterPointer = new THREE.Raycaster(
       new THREE.Vector3(),
       new THREE.Vector3(),
       0,
-      1000
+      PLAYER_INTERACTIVITY_DISTANCE
     );
   }
 
@@ -157,9 +158,9 @@ export default class Player extends PointerLockControls {
     // Set velocity based on key input
     // Multiplication of delta (time difference between fames) ensures movement speed is independent of framerate
     if (this.isMoveForward || this.isMoveBackward)
-      this.velocity.z -= this.direction.z * 400.0 * delta;
+      this.velocity.z -= this.direction.z * PLAYER_SPEED * delta;
     if (this.isMoveLeft || this.isMoveRight)
-      this.velocity.x -= this.direction.x * 400.0 * delta;
+      this.velocity.x -= this.direction.x * PLAYER_SPEED * delta;
 
     // Cast rays in direction of movements
     this.raycasterInfront.ray.origin.copy(this.getObject().position);

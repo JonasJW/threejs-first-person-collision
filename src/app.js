@@ -3,6 +3,10 @@ import Box from "./box";
 import Floor from "./floor";
 import Player from "./player";
 
+export const PLAYER_SPEED = 400.0;
+export const PLAYER_COLLISION_DISTANCE = 10;
+export const PLAYER_INTERACTIVITY_DISTANCE = 1000;
+
 let camera, scene, renderer, player;
 
 init();
