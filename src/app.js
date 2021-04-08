@@ -95,3 +95,36 @@ function animate() {
   player.update();
   renderer.render(scene, camera);
 }
+
+
+
+// Example for rendering the scene in a react app.
+/*export default function Scene() {
+
+  const mount = useRef();
+
+  useEffect(() => {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    mount.current.appendChild(renderer.domElement)
+
+    setupScene();
+    setupEventListeners(mount);
+    animate();
+  });
+
+  return <div>
+    <div id="blocker">
+      <div id="instructions" >
+        <span style={{ fontSize: "36px" }}>Click to play</span>
+        <br /><br />
+        Move: WASD<br/>
+        Jump: SPACE<br/>
+        Look: MOUSE
+      </div>
+    </div>
+    <div ref={mount}></div>
+  </div>
+}*/

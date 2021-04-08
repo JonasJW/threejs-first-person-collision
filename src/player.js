@@ -8,16 +8,16 @@ export default class Player extends PointerLockControls {
     this.camera = camera;
     this.scene = scene;
 
-    this.raycasterInfront;
-    this.raycasterBehind;
-    this.raycasterLeft;
-    this.raycasterRight;
-    this.raycasterPointer;
+    this.raycasterInfront = undefined;
+    this.raycasterBehind = undefined;
+    this.raycasterLeft = undefined;
+    this.raycasterRight = undefined;
+    this.raycasterPointer = undefined;
 
-    this.hoveringItem;
+    this.hoveringItem = undefined;
     this.followCamera = false;
-    this.isFollowing;
-    this.originalPosition;
+    this.isFollowing = undefined;
+    this.originalPosition = undefined;
 
     this.isMoveForward = false;
     this.isMoveBackward = false;
