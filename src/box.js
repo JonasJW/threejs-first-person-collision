@@ -1,9 +1,12 @@
 import * as THREE from "three";
+import { MESH_COLOR, MESH_TRANSPARENCY } from "./app";
 
 export default class Box extends THREE.Mesh {
-    constructor(position) {
+    constructor(position = new THREE.Vector3(0, 0, 0)) {
         const geometry = new THREE.BoxGeometry(20, 20 , 20);
-        const material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
+        const material = new THREE.MeshPhongMaterial( { color: MESH_COLOR } );
+        material.transparent = true;
+        material.opacity = MESH_TRANSPARENCY;
 
         super(geometry, material);
 

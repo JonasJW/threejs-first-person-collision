@@ -1,6 +1,12 @@
 import * as THREE from "three";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
-import { PLAYER_COLLISION_DISTANCE, PLAYER_INTERACTIVITY_DISTANCE, PLAYER_SPEED } from "./app";
+import {
+  MESH_COLOR_SELECTED,
+  MESH_COLOR_UNSELECTED,
+  PLAYER_COLLISION_DISTANCE,
+  PLAYER_INTERACTIVITY_DISTANCE,
+  PLAYER_SPEED,
+} from "./app";
 
 export default class Player extends PointerLockControls {
   constructor(camera, document, scene) {
@@ -37,7 +43,6 @@ export default class Player extends PointerLockControls {
   }
 
   setupInputs(document) {
-
     const onKeyDown = (event) => {
       switch (event.code) {
         case "ArrowUp":
@@ -137,7 +142,7 @@ export default class Player extends PointerLockControls {
   update() {
     if (this.isLocked) {
       this.movementWithCollision();
-      this.objectInteraction();
+      // this.objectInteraction();
     }
   }
 
@@ -187,40 +192,46 @@ export default class Player extends PointerLockControls {
     );
     this.raycasterRight.ray.origin.y -= 5;
 
-    // Check for collisions in directions of movements
-    const intersectionsInfront = this.raycasterInfront.intersectObjects(
-      this.objects
-    );
-    const intersectionsBehind = this.raycasterBehind.intersectObjects(
-      this.objects
-    );
-    const intersectionsLeft = this.raycasterLeft.intersectObjects(this.objects);
-    const intersectionsRight = this.raycasterRight.intersectObjects(
-      this.objects
-    );
+    // // Check for collisions in directions of movements
+    // const intersectionsInfront = this.raycasterInfront.intersectObjects(
+    //   this.objects,
+    //   true
+    // );
+    // const intersectionsBehind = this.raycasterBehind.intersectObjects(
+    //   this.objects,
+    //   true
+    // );
+    // const intersectionsLeft = this.raycasterLeft.intersectObjects(
+    //   this.objects,
+    //   true
+    // );
+    // const intersectionsRight = this.raycasterRight.intersectObjects(
+    //   this.objects,
+    //   true
+    // );
 
-    // check for objects in direction of movements
-    const infrontObject = intersectionsInfront.length > 0;
-    const behindObject = intersectionsBehind.length > 0;
-    const leftObject = intersectionsLeft.length > 0;
-    const rightObject = intersectionsRight.length > 0;
+    // // check for objects in direction of movements
+    // const infrontObject = intersectionsInfront.length > 0;
+    // const behindObject = intersectionsBehind.length > 0;
+    // const leftObject = intersectionsLeft.length > 0;
+    // const rightObject = intersectionsRight.length > 0;
 
-    // Check for collations in directions of movements and if there is a collision, only allow movement in the opposite direction of the collision
-    if (infrontObject) {
-      this.velocity.z = Math.max(0, this.velocity.z);
-    }
+    // // Check for collations in directions of movements and if there is a collision, only allow movement in the opposite direction of the collision
+    // if (infrontObject) {
+    //   this.velocity.z = Math.max(0, this.velocity.z);
+    // }
 
-    if (behindObject) {
-      this.velocity.z = Math.min(0, this.velocity.z);
-    }
+    // if (behindObject) {
+    //   this.velocity.z = Math.min(0, this.velocity.z);
+    // }
 
-    if (leftObject) {
-      this.velocity.x = Math.min(0, this.velocity.x);
-    }
+    // if (leftObject) {
+    //   this.velocity.x = Math.min(0, this.velocity.x);
+    // }
 
-    if (rightObject) {
-      this.velocity.x = Math.max(0, this.velocity.x);
-    }
+    // if (rightObject) {
+    //   this.velocity.x = Math.max(0, this.velocity.x);
+    // }
 
     // Update this with velocity
     this.moveRight(-this.velocity.x * delta);
@@ -236,7 +247,8 @@ export default class Player extends PointerLockControls {
     );
 
     const intersectionsPointer = this.raycasterPointer.intersectObjects(
-      this.objects
+      this.objects,
+      true
     );
 
     // Check for items over pointer
@@ -266,21 +278,27 @@ export default class Player extends PointerLockControls {
   }
 
   setHoveringEffect(item) {
-    item.material = new THREE.MeshPhongMaterial({
-      color: "#ffab2e",
-    });
+    item.material.transparent = false;
+    item.material.opacity = 1;
+    // item.material = new THREE.MeshPhongMaterial({
+    //   color: MESH_COLOR_SELECTED,
+    // });
     item.scale.x = item.scale.y = item.scale.z = 1.1;
   }
 
   resetHoveringEffect(item) {
-    item.material = new THREE.MeshPhongMaterial({
-      color: 0x00ff00,
-    });
+    item.material.transparent = true;
+    item.material.opacity = 0.5;
+    // item.material = new THREE.MeshPhongMaterial({
+    //   color: MESH_COLOR_UNSELECTED,
+    // });
     item.scale.x = item.scale.y = item.scale.z = 1;
   }
 
   setSelectedEffect(item) {
-    this.originalPosition = JSON.parse(JSON.stringify(this.hoveringItem.position));
+    this.originalPosition = JSON.parse(
+      JSON.stringify(this.hoveringItem.position)
+    );
     item.material = new THREE.MeshPhongMaterial({
       color: "#e63131",
     });

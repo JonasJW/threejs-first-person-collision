@@ -2,16 +2,24 @@ import * as THREE from "three";
 import Box from "./box";
 import Floor from "./floor";
 import Player from "./player";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+import Model from "./model";
 
 export const PLAYER_SPEED = 400.0;
 export const PLAYER_COLLISION_DISTANCE = 10;
 export const PLAYER_INTERACTIVITY_DISTANCE = 1000;
 
-let camera, scene, renderer, player;
+export const MESH_COLOR = "#fff";
+export const MESH_TRANSPARENCY = 0.5;
+
+let camera, scene, renderer, controls;
 
 init();
 setupScene();
-setupEventListeners();
+// setupEventListeners();
 animate();
 
 function init() {
@@ -37,45 +45,62 @@ function setupScene() {
   scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
   // Create lighting
-  const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
+  const light = new THREE.HemisphereLight("0xeeeeff", 0x777788, 0.75);
   light.position.set(0.5, 1, 0.75);
   scene.add(light);
 
-  // Create player
-  player = new Player(camera, document, scene);
-  scene.add(player.getObject());
+  // const box = new Box();
+  // scene.add(box);
+
+  loadModel("https://downloads.ctfassets.net/8r9hib204w0q/3vraaSis3wcvDOhF7J3JXV/a99f2fd8b1130d8580030d74f9999d7d/Buehne_Links_Complete.glb").then(res => scene.add(res))
 
   // Create the floor
-  const floor = new Floor();
-  scene.add(floor);
+  // const floor = new Floor();
+  // scene.add(floor);
 
-  // Create box environment
-  const objects = [];
-  for (let i = 0; i < 30; i ++) {
-    const cube = new Box(new THREE.Vector3(i * 30, 10, -30));
-    scene.add(cube);
-    objects.push(cube);
-  }
+  controls = new OrbitControls(camera, renderer.domElement);
+  // controls = new Player(camera, document, scene);
+}
 
-  // Assign collision objects to player
-  player.setCollisionObjects(objects);
+function loadModel(model, scale, position) {
+  return new Promise((resolve, reject) => {
+    // Instantiate a loader
+    const loader = new GLTFLoader();
+    // Load a glTF resource
+    loader.load(
+      model,
+      (gltf) => {
+        // gltf.scene.scale.set(scale, scale, scale);
+        // gltf.scene.position.set(position.x, position.y, position.z);
+        resolve(gltf.scene);
+      },
+      // called while loading is progressing
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      // called when loading has errors
+      function (error) {
+        console.error("An error happened", error);
+        reject();
+      }
+    );
+  });
 }
 
 function setupEventListeners() {
-
   const blocker = document.getElementById("blocker");
   const instructions = document.getElementById("instructions");
 
   instructions.addEventListener("click", function () {
-    player.lock();
+    controls.lock();
   });
 
-  player.addEventListener("lock", function () {
+  controls.addEventListener("lock", function () {
     instructions.style.display = "none";
     blocker.style.display = "none";
   });
 
-  player.addEventListener("unlock", function () {
+  controls.addEventListener("unlock", function () {
     blocker.style.display = "block";
     instructions.style.display = "";
   });
@@ -92,39 +117,6 @@ function onWindowResize() {
 
 function animate() {
   requestAnimationFrame(animate);
-  player.update();
+  controls.update();
   renderer.render(scene, camera);
 }
-
-
-
-// Example for rendering the scene in a react app.
-/*export default function Scene() {
-
-  const mount = useRef();
-
-  useEffect(() => {
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    mount.current.appendChild(renderer.domElement)
-
-    setupScene();
-    setupEventListeners(mount);
-    animate();
-  });
-
-  return <div>
-    <div id="blocker">
-      <div id="instructions" >
-        <span style={{ fontSize: "36px" }}>Click to play</span>
-        <br /><br />
-        Move: WASD<br/>
-        Jump: SPACE<br/>
-        Look: MOUSE
-      </div>
-    </div>
-    <div ref={mount}></div>
-  </div>
-}*/
